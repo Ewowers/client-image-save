@@ -1,0 +1,14 @@
+header {
+  display: flex;
+  justify-content: center;
+}
+header .card {
+  margin: 15px;
+  padding: 15px;
+  border: none;
+}
+.card a {
+  color: #000;
+  text-decoration: none;
+  font-size: 18px;
+}
