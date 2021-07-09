@@ -76,7 +76,10 @@ const Admin = () => {
             </div>
           </div>
           <div className="card">
-            <img src={form.upload} className="w-100 card-img-top" />
+            <img
+              src={form.upload || "http://love-portal.ru/foto/foto0/97.jpg"}
+              className="w-100 card-img-top"
+            />
             <div className="card-body">
               <div className="card-title">{form.title || "title"}</div>
             </div>

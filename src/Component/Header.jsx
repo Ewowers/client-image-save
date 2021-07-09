@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom"; //ссылка без перезагруки
+import Auth from "./auth";
 import "./Header.css";
 const Header = () => {
   return (
@@ -13,17 +14,18 @@ const Header = () => {
       <div className="card">
         <Link to="/category/elektronnye-sigarety">Устройства</Link>
       </div>
+
       <div className="card">
-        <Link to="/category/alkaline">Щелочные жидкости</Link>
-      </div>
-      <div className="card">
-        <Link to="/category/salt">Солевые жидкости</Link>
+        <Link to="/category/juicy">Солевые жидкости</Link>
       </div>
       <div className="card">
         <Link to="/category/atomajzery">Атомайзеры</Link>
       </div>
       <div className="card">
         <Link to="/category/component">Комплектующие</Link>
+      </div>
+      <div className="card">
+        <Auth />
       </div>
     </header>
   );
