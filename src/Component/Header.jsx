@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom"; //ссылка без перезагруки
-import Auth from "./auth";
+//import Auth from "./auth";
 import "./Header.css";
 const Header = () => {
   return (
@@ -24,9 +24,7 @@ const Header = () => {
       <div className="card">
         <Link to="/category/component">Комплектующие</Link>
       </div>
-      <div className="card">
-        <Auth />
-      </div>
+      <div className="card">{/* <Auth /> */}</div>
     </header>
   );
 };

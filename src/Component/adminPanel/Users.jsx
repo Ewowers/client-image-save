@@ -1,49 +1,93 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "antd";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { Button, Modal } from "antd";
 import axios from "axios";
 const UserPanel = () => {
-  let Card = ({ name, id }) => {
+  let [users, setUsers] = useState([]);
+  let [user, setUser] = useState({});
+  let [id, setId] = useState("");
+  let [form, setForm] = useState({});
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const get = () => {
+    axios.get("/api/auth/").then((response) => {
+      setUsers(response.data);
+    });
+  };
+  useEffect(() => get(), []);
+  const showModal = (id) => {
+    axios.post("/api/auth/user/" + id).then((res) => {
+      setUser(res.data);
+      setId(res.data._id);
+      setIsModalVisible(true);
+    });
+  };
+  let handleChange = (e) => {
+    setUser({ ...user, [e.target.id]: e.target.value });
+  };
+  const handleOk = () => {
+    console.log(user);
+    setIsModalVisible(false);
+    axios.put("/api/auth/" + id, user).then((res) => {
+      get();
+    });
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  let Card = ({ name, status, id }) => {
     return (
-      <div className="card">
-        <div className="card-body">
-          <p style={{ fontSize: 18, textAlign: "center" }}>{name}</p>
-        </div>
-        <div className="card-footer" style={{ justifyContent: "flex-end", display: "flex" }}>
-          <Button type="primary" style={{ marginRight: 5 }} onClick={() => yes(id)}>
-            <CheckOutlined />
-          </Button>
-          <Button type="danger" onClick={() => ban(id)}>
-            <CloseOutlined />
+      <div className="item" style={styles.card}>
+        <p style={{ margin: 0, display: "flex" }}>
+          <span style={{ width: 250, display: "block" }}>
+            Логин <strong>{name}</strong>
+          </span>
+          <span>
+            статус <strong>{status}</strong>
+          </span>
+        </p>
+        <div className="btn-list">
+          <Button onClick={() => showModal(id)} type="danger">
+            изменить
           </Button>
         </div>
       </div>
     );
   };
-  let [users, setUser] = useState([]);
-  let gets = () => {
-    axios.get("/api/auth/").then((response) => {
-      let arr = response.data;
-      arr = arr.map((item, i) => <Card name={item.name} id={item.id} key={i} />);
-      setUser(arr);
-    });
-  };
-  const ban = (id) => {
-    console.log(id);
-    axios.delete("/api/auth/" + id).then((res) => {
-      gets();
-    });
-  };
-  const yes = (id) => {
-    console.log(id);
-    axios.put("/api/auth/" + id).then((res) => {
-      gets();
-    });
-  };
-  useEffect(() => {
-    gets();
-  }, []);
-
-  return <>{users}</>;
+  let list = users.map((item, i) => <Card name={item.name} status={item.status} key={i} id={item._id} />);
+  return (
+    <>
+      {list}
+      <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+        <div className="mb-3">
+          <label htmlFor="name">Логин</label>
+          <input className="form-control" id="name" value={user.name} onChange={handleChange} />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="password">Пороль</label>
+          <input className="form-control" id="password" value={user.password} onChange={handleChange} />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="status">Статус</label>
+          <select id="status" className="form-select" value={user.status} onChange={handleChange}>
+            <option value="admin">admin</option>
+            <option value="user">user</option>
+          </select>
+        </div>
+      </Modal>
+    </>
+  );
+};
+let Form;
+const styles = {
+  card: {
+    width: "100%",
+    padding: 5,
+    border: "1px solid",
+    marginBottom: 5,
+    borderRadius: 5,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
 };
 export default UserPanel;
