@@ -2,12 +2,16 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Button, Modal, Form, Input, Select, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
+import { useParams } from "react-router-dom";
 const { Option } = Select;
 const Product = () => {
   let [product, setProduct] = useState([]);
-
+  let { slug } = useParams();
   const get = () => {
-    axios.get("/api").then((response) => {
+    let url;
+    if (slug === "all") url = "/api";
+    else url = "/api/product=" + slug;
+    axios.get(url).then((response) => {
       setProduct(response.data);
     });
   };

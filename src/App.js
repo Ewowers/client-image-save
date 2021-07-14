@@ -1,11 +1,10 @@
-import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
-import Header from "./Component/Header"; //хедер
+import { HashRouter, Link, Route, Switch } from "react-router-dom";
 import Admin from "./Component/admin";
 import Product from "./Component/Product"; //страница категорий продукта
 import Authorization from "./Component/Authorization";
 const App = () => {
   return (
-    <Router>
+    <HashRouter>
       {/* <Header /> */}
       <Switch>
         <Route path="/admin">
@@ -18,7 +17,7 @@ const App = () => {
           <Authorization />
         </Route>
       </Switch>
-    </Router>
+    </HashRouter>
   );
 };
 

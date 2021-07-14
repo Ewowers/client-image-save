@@ -10,17 +10,20 @@ const styles = {
     margin: 15,
   },
 };
-const Product = () => {
-  let { id } = useParams(); //params id
+const Product = ({ state }) => {
+  let { slug } = useParams(); //params id
 
   let [product, setProduct] = useState([]); //стейт с массивом продуктов
-  useEffect(() => {
-    //получение продуктов при загрузки страницы
-    axios.get(id ? "/api/type=" + id : "/api").then((res) => {
+  let get = () => {
+    axios.get(slug ? "/api/type=" + slug : "/api").then((res) => {
       setProduct(res.data);
     });
+  };
+  useEffect(() => {
+    //получение продуктов при загрузки страницы
+    get();
   }, []);
-
+  document.on("click", () => get(slug));
   let listCard = product.map((item, i) => {
     // карточка товара
     return (

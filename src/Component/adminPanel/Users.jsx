@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Button, Modal } from "antd";
+import { useParams } from "react-router-dom";
 import axios from "axios";
-const UserPanel = () => {
+const UserPanel = ({ state }) => {
+  const { slug } = useParams();
   let [users, setUsers] = useState([]);
   let [user, setUser] = useState({});
   let [id, setId] = useState("");
-  let [form, setForm] = useState({});
   const [isModalVisible, setIsModalVisible] = useState(false);
   const get = () => {
     axios.get("/api/auth/").then((response) => {
       setUsers(response.data);
     });
   };
-  useEffect(() => get(), []);
+  useEffect(() => {
+    get();
+  }, [state]);
   const showModal = (id) => {
     axios.post("/api/auth/user/" + id).then((res) => {
       setUser(res.data);
