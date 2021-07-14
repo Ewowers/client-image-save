@@ -4,24 +4,25 @@ import { Button, Modal, Form, Input, Select, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 const { Option } = Select;
-const Product = () => {
-  let [product, setProduct] = useState([]);
-  let { slug } = useParams();
-  const get = () => {
-    let url;
-    if (slug === "all") url = "/api";
-    else url = "/api/product=" + slug;
-    axios.get(url).then((response) => {
-      setProduct(response.data);
-    });
-  };
-  useEffect(() => {
-    get();
-  }, []);
-  let list = product.map((item, i) => <Card key={i} obj={item} />);
+const Product = ({ array }) => {
+  console.log(array);
+  // let [product, setProduct] = useState([]);
+  // let { slug } = useParams();
+  // const get = () => {
+  //   let url;
+  //   if (slug === "all") url = "/api";
+  //   else url = "/api/product=" + slug;
+  //   axios.get(url).then((response) => {
+  //     setProduct(response.data);
+  //   });
+  // };
+  // useEffect(() => {
+  //   get();
+  // }, []);
+  let list = array.map((item, i) => <Card key={i} obj={item} />);
   return (
     <div>
-      <HeaderProduct get={get} />
+      <HeaderProduct />
       <div style={styles.cardList}>{list}</div>
     </div>
   );
@@ -36,7 +37,7 @@ const Card = ({ obj }) => {
     </div>
   );
 };
-const HeaderProduct = ({ get }) => {
+const HeaderProduct = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = () => {
@@ -53,7 +54,6 @@ const HeaderProduct = ({ get }) => {
   const onFinish = (values) => {
     axios.post("/api/add", { ...values, upload: values.upload[0].thumbUrl }).then((res) => {
       setIsModalVisible(false);
-      get();
     });
   };
 

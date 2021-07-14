@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Modal } from "antd";
-import { useParams } from "react-router-dom";
 import axios from "axios";
-const UserPanel = ({ state }) => {
-  const { slug } = useParams();
+const UserPanel = ({ array }) => {
   let [users, setUsers] = useState([]);
   let [user, setUser] = useState({});
   let [id, setId] = useState("");
@@ -13,9 +11,11 @@ const UserPanel = ({ state }) => {
       setUsers(response.data);
     });
   };
+
   useEffect(() => {
-    get();
-  }, [state]);
+    // get();
+    axios.get("/api/auth/").then((res) => console.log(res.data));
+  }, []);
   const showModal = (id) => {
     axios.post("/api/auth/user/" + id).then((res) => {
       setUser(res.data);
@@ -56,7 +56,7 @@ const UserPanel = ({ state }) => {
       </div>
     );
   };
-  let list = users.map((item, i) => <Card name={item.name} status={item.status} key={i} id={item._id} />);
+  let list = array.map((item, i) => <Card name={item.name} status={item.status} key={i} id={item._id} />);
   return (
     <>
       {list}
