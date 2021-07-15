@@ -12,10 +12,6 @@ const UserPanel = ({ array }) => {
     });
   };
 
-  useEffect(() => {
-    // get();
-    axios.get("/api/auth/").then((res) => console.log(res.data));
-  }, []);
   const showModal = (id) => {
     axios.post("/api/auth/user/" + id).then((res) => {
       setUser(res.data);
@@ -29,6 +25,7 @@ const UserPanel = ({ array }) => {
   const handleOk = () => {
     console.log(user);
     setIsModalVisible(false);
+    console.log(id);
     axios.put("/api/auth/" + id, user).then((res) => {
       get();
     });
@@ -45,7 +42,7 @@ const UserPanel = ({ array }) => {
             Логин <strong>{name}</strong>
           </span>
           <span>
-            статус <strong>{status}</strong>
+            статус <strong>{status === "nouser" ? "" : status}</strong>
           </span>
         </p>
         <div className="btn-list">
@@ -73,7 +70,9 @@ const UserPanel = ({ array }) => {
           <label htmlFor="status">Статус</label>
           <select id="status" className="form-select" value={user.status} onChange={handleChange}>
             <option value="admin">admin</option>
+            <option value="moder">moder</option>
             <option value="user">user</option>
+            <option value="nouser"></option>
           </select>
         </div>
       </Modal>

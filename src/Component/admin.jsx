@@ -1,20 +1,20 @@
 import React, { useState } from "react";
-import { Layout, Menu } from "antd";
-import { DropboxOutlined, UserOutlined, HomeOutlined, MailOutlined } from "@ant-design/icons";
-import { Switch, Route, Link } from "react-router-dom";
+import { Layout, Menu, Button } from "antd";
+import { DropboxOutlined, UserOutlined, HomeOutlined } from "@ant-design/icons";
+import { Switch, Route, Link, Redirect } from "react-router-dom";
 import Users from "./adminPanel/Users";
 import Product from "./adminPanel/Product";
 import axios from "axios";
 const { Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 const Admin = () => {
+  const [url, setUrl] = useState(false);
   const [users, setUsers] = useState([]);
   const [product, setProduct] = useState([]);
   const getProduct = (slug) => {
-    let url;
-    if (slug === "product") url = "/api";
-    else url = "/api/product=" + slug;
+    let url = "/api/product/type=" + slug;
     axios.get(url).then((response) => {
+      console.log(response.data);
       setProduct(response.data);
     });
   };
@@ -27,8 +27,17 @@ const Admin = () => {
       console.log("url:", url);
     });
   };
+  const out = () => {
+    axios.post("/api/auth/out").then((res) => {
+      if (res.data) setUrl(true);
+    });
+  };
   return (
     <Layout style={{ minHeight: "100vh" }}>
+      <Button onClick={out} type="danger" style={{ position: "fixed", bottom: 15, left: 15, zIndex: 2 }}>
+        Выход
+      </Button>
+      {url ? <Redirect to="/" /> : null}
       <Sider
         breakpoint="lg"
         collapsedWidth="0"
@@ -52,37 +61,47 @@ const Admin = () => {
             </Menu.Item>
             <Menu.Item key="3">
               <Link to="/admin/user=admin" onClick={() => getUsers("admin")}>
-                Admin
+                Админ
               </Link>
             </Menu.Item>
             <Menu.Item key="4">
+              <Link to="/admin/user=moder" onClick={() => getUsers("moder")}>
+                Модераторы
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="5">
               <Link to="/admin/user=user" onClick={() => getUsers("user")}>
-                Users
+                Пользователи
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="6">
+              <Link to="/admin/user=null" onClick={() => getUsers("nouser")}>
+                Ожидающие потвержедния
               </Link>
             </Menu.Item>
           </SubMenu>
           <SubMenu key="sub2" icon={<DropboxOutlined />} title="User role">
-            <Menu.Item key="5">
-              <Link to="/admin/product=all" onClick={() => getProduct("product")}>
+            <Menu.Item key="7">
+              <Link to="/admin/product=all" onClick={() => getProduct("all")}>
                 All
               </Link>
             </Menu.Item>
-            <Menu.Item key="6">
+            <Menu.Item key="8">
               <Link to="/admin/product=product_1" onClick={() => getProduct("product_1")}>
                 product 1
               </Link>
             </Menu.Item>
-            <Menu.Item key="7">
+            <Menu.Item key="9">
               <Link to="/admin/product=product_2" onClick={() => getProduct("product_2")}>
                 product 2
               </Link>
             </Menu.Item>
-            <Menu.Item key="8">
+            <Menu.Item key="10">
               <Link to="/admin/product=product_3" onClick={() => getProduct("product_3")}>
                 product 3
               </Link>
             </Menu.Item>
-            <Menu.Item key="9">
+            <Menu.Item key="11">
               <Link to="/admin/product=product_4" onClick={() => getProduct("product_4")}>
                 product 4
               </Link>

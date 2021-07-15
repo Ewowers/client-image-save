@@ -7,6 +7,7 @@ const Authorization = () => {
   let [url, setUrl] = useState(null);
   let [message, setMessage] = useState("");
   let [messageAuth, setMessageAuth] = useState("");
+  let [noRegistr, setNoRegistr] = useState(false);
   const auth = (body) => {
     axios.post("/api/auth/authorization", body).then((response) => {
       console.log(response.data);
@@ -19,26 +20,31 @@ const Authorization = () => {
   };
   const registration = (body) => {
     axios.post("/api/auth/registration", body).then((response) => {
-      if (response.data.status) setUrl("/" + response.data.url);
+      if (response.data.status) setNoRegistr(true);
       else setMessage(response.data.message);
     });
   };
   useEffect(() => {
     axios.post("/api/auth/onload").then((response) => {
       if (response.data.status) setUrl("/" + response.data.url);
+      if (response.data.registr) setNoRegistr(true);
     });
   }, []);
   return (
     <div style={style.body}>
       {url === null ? "" : <Redirect to={url} />}
-      <Tabs defaultActiveKey="1" style={{ width: "25%" }}>
-        <TabPane tab="Авторизация" key="1">
-          <Demo auth={auth} messageAuth={messageAuth} />
-        </TabPane>
-        <TabPane tab="Регистрация" key="2">
-          <Registr registration={registration} message={message} />
-        </TabPane>
-      </Tabs>
+      {noRegistr ? (
+        <h1>Ваша заявка принята, ожидайте потвержедния</h1>
+      ) : (
+        <Tabs defaultActiveKey="1" style={{ width: "25%" }}>
+          <TabPane tab="Авторизация" key="1">
+            <Demo auth={auth} messageAuth={messageAuth} />
+          </TabPane>
+          <TabPane tab="Регистрация" key="2">
+            <Registr registration={registration} message={message} />
+          </TabPane>
+        </Tabs>
+      )}
     </div>
   );
 };

@@ -5,20 +5,6 @@ import { UploadOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 const { Option } = Select;
 const Product = ({ array }) => {
-  console.log(array);
-  // let [product, setProduct] = useState([]);
-  // let { slug } = useParams();
-  // const get = () => {
-  //   let url;
-  //   if (slug === "all") url = "/api";
-  //   else url = "/api/product=" + slug;
-  //   axios.get(url).then((response) => {
-  //     setProduct(response.data);
-  //   });
-  // };
-  // useEffect(() => {
-  //   get();
-  // }, []);
   let list = array.map((item, i) => <Card key={i} obj={item} />);
   return (
     <div>
@@ -52,7 +38,8 @@ const HeaderProduct = () => {
     setIsModalVisible(false);
   };
   const onFinish = (values) => {
-    axios.post("/api/add", { ...values, upload: values.upload[0].thumbUrl }).then((res) => {
+    console.log(values);
+    axios.post("/api/product/add", { ...values, upload: values.upload[0].thumbUrl }).then((res) => {
       setIsModalVisible(false);
     });
   };
@@ -113,7 +100,7 @@ const HeaderProduct = () => {
               },
             ]}
           >
-            <Input.Password />
+            <Input />
           </Form.Item>
           <Form.Item
             label="Тип"
