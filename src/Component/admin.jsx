@@ -1,23 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Layout, Menu, Button } from "antd";
-import { DropboxOutlined, UserOutlined, HomeOutlined } from "@ant-design/icons";
+import { DropboxOutlined, UserOutlined, HomeOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { Switch, Route, Link, Redirect } from "react-router-dom";
 import Users from "./adminPanel/Users";
 import Product from "./adminPanel/Product";
 import axios from "axios";
-const { Content, Footer, Sider } = Layout;
+import BlackList from "./adminPanel/BlackList";
+const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
 const Admin = () => {
   const [url, setUrl] = useState(false);
+  const [user, setUser] = useState();
   const [users, setUsers] = useState([]);
   const [product, setProduct] = useState([]);
   const getProduct = (slug) => {
     let url = "/api/product/type=" + slug;
     axios.get(url).then((response) => {
-      console.log(response.data);
       setProduct(response.data);
     });
   };
+  useEffect(
+    () =>
+      axios.post("/api/auth/important").then((res) => {
+        setUser(res.data);
+      }),
+    []
+  );
+
   const getUsers = (slug) => {
     let url;
     if (slug === "all") url = "/api/auth";
@@ -107,6 +116,9 @@ const Admin = () => {
               </Link>
             </Menu.Item>
           </SubMenu>
+          <Menu.Item key="12" icon={<UnorderedListOutlined />}>
+            <Link to="/admin/blackList">Black list</Link>
+          </Menu.Item>
         </Menu>
       </Sider>
       <Layout>
@@ -117,10 +129,13 @@ const Admin = () => {
                 <h1>is home</h1>
               </Route>
               <Route path="/admin/user=:slug">
-                <Users array={users} />
+                <Users array={users} important={user} />
               </Route>
               <Route path="/admin/product=:slug">
                 <Product array={product} />
+              </Route>
+              <Route path="/admin/blackList">
+                <BlackList />
               </Route>
             </Switch>
           </div>

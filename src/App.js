@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Admin from "./Component/admin";
-import Product from "./Component/Product"; //страница категорий продукта
+import User from "./Component/user";
 import Authorization from "./Component/Authorization";
 const App = () => {
   return (
@@ -9,8 +9,8 @@ const App = () => {
         <Route path="/admin">
           <Admin />
         </Route>
-        <Route path="/category/:id">
-          <Product />
+        <Route path="/user/:slug">
+          <User />
         </Route>
         <Route path="/" exact>
           <Authorization />

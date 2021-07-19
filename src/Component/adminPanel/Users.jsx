@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Button, Modal } from "antd";
 import axios from "axios";
-const UserPanel = ({ array }) => {
+const UserPanel = ({ array, important }) => {
+  console.log(array);
+  let num = important;
   let [users, setUsers] = useState([]);
   let [user, setUser] = useState({});
   let [id, setId] = useState("");
@@ -34,26 +36,47 @@ const UserPanel = ({ array }) => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-  let Card = ({ name, status, id }) => {
+  const ban = (id) => {
+    axios.post("/api/blacklist/add", { id: id });
+  };
+  const delit = (id) => {
+    axios.delete("/api/auth/" + id);
+  };
+  let Card = ({ name, status, id, important, ip }) => {
     return (
       <div className="item" style={styles.card}>
         <p style={{ margin: 0, display: "flex" }}>
           <span style={{ width: 250, display: "block" }}>
             Логин <strong>{name}</strong>
           </span>
-          <span>
+          <span style={{ width: 250, display: "block" }}>
             статус <strong>{status === "nouser" ? "" : status}</strong>
           </span>
+          <span>
+            ip: <strong>{ip ? ip : null}</strong>
+          </span>
         </p>
-        <div className="btn-list">
-          <Button onClick={() => showModal(id)} type="danger">
-            изменить
-          </Button>
-        </div>
+        {important <= num.important ? (
+          <div className="btn-list">
+            <Button type="danger" onClick={() => ban(ip)}>
+              Бан
+            </Button>
+            <Button type="danger" onClick={() => delit(id)} style={{ margin: "0 10px" }}>
+              Удалить
+            </Button>
+            <Button onClick={() => showModal(id)} type="danger">
+              изменить
+            </Button>
+          </div>
+        ) : null}
       </div>
     );
   };
-  let list = array.map((item, i) => <Card name={item.name} status={item.status} key={i} id={item._id} />);
+  let list = array.map((item, i) => {
+    return (
+      <Card name={item.name} status={item.status} key={i} id={item._id} important={item.important} ip={item?.ip} />
+    );
+  });
   return (
     <>
       {list}
@@ -79,7 +102,6 @@ const UserPanel = ({ array }) => {
     </>
   );
 };
-let Form;
 const styles = {
   card: {
     width: "100%",

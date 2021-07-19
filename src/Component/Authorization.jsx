@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
-import { Form, Input, Button, Checkbox, Tabs } from "antd";
+import { Form, Input, Button, Tabs } from "antd";
 const { TabPane } = Tabs;
 const Authorization = () => {
   let [url, setUrl] = useState(null);
@@ -37,7 +37,7 @@ const Authorization = () => {
         <h1>Ваша заявка принята, ожидайте потвержедния</h1>
       ) : (
         <Tabs defaultActiveKey="1" style={{ width: "25%" }}>
-          <TabPane tab="Авторизация" key="1">
+          <TabPane tab="Войти" key="1">
             <Demo auth={auth} messageAuth={messageAuth} />
           </TabPane>
           <TabPane tab="Регистрация" key="2">
